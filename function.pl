@@ -12,28 +12,28 @@ my $config = {
 };
 
 my $sshrc_string = '[-z "$PS1"] && return\nexec zsh;';
-my $port = $1 if $ARGV =~ /p\s*(\d*)/;
+my $port = $1 if join(' ', @ARGV) =~ /p\s*(\d*)/;
 my $at_symbol_index = index($ARGV[-1], '@') ;
 my $userhost = $ARGV[-1];
 
-if ($at_symbol_index != -1) {
-    #$hostname = substr($userhost, $at_symbol_index + 1); 
-    #$username = $1 if $userhost =~ /(\w*)@/;
-    foreach my $item ($config->{'local_locations'}) {
-        print @{$item};
-        #if (-d $item) {
-            #add port in scp
-            `scp -r @{$item} ${userhost}:~/`
-        #}
+sub scp {
+    my $files_string;
+    my $port_string;
+    if ($at_symbol_index != -1) {
+        foreach my $item ($config->{'local_locations'}) {
+            $files_string += $item;
+        }
     }
-}
-else {
-    print 'didn\'t make it';
-    $hostname = $ARGV[-1];
+    $port_string = ($port) ? "-P $port" : "";
+    print "scp -r $port_string $files_string ${userhost}:~/";
+    `scp -r $port_string $files_string ${userhost}:~/`;
 }
 
-# send files to remote;
+scp();
+return @ARGV;
 # put together an ssh string; 
 ## first ssh
 ## with perliminary arguments
 ## user@hostNAME;
+        #$hostname = substr($userhost, $at_symbol_index + 1); 
+        #$username = $1 if $userhost =~ /(\w*)@/;
