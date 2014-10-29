@@ -17,20 +17,22 @@ my $at_symbol_index = index($ARGV[-1], '@') ;
 my $userhost = $ARGV[-1];
 
 sub scp {
-    my $files_string;
-    my $port_string;
-    if ($at_symbol_index != -1) {
-        foreach my $item ($config->{'local_locations'}) {
-            $files_string += $item;
-        }
+    my $files_string = '';
+    foreach my $item (@{$config->{'local_locations'}}) {
+        print $item;
+        $files_string .= $item . ' ';
     }
+    print "files - $files_string\n";
+
+    my $port_string;
     $port_string = ($port) ? "-P $port" : "";
-    print "scp -r $port_string $files_string ${userhost}:~/";
+    print "scp -r$port_string $files_string ${userhost}:~/";
     `scp -r $port_string $files_string ${userhost}:~/`;
 }
 
 scp();
-return @ARGV;
+
+#return @ARGV; Need to ssh in perl if perl allows me to continue on in ssh without the perl script anymore
 # put together an ssh string; 
 ## first ssh
 ## with perliminary arguments
