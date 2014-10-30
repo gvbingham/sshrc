@@ -35,10 +35,10 @@ print "running the following command... scp -r$port_string $files_string ${userh
 
 # get string to append to .bashrc 
 # my $bashrc_string = '[-z "$PS1"] && return\nexec zsh;';
-my $bashrc_string = 'case "$-" in\n*i*) exec zsh ;;\n*) echo "" ;;\nesac';
 # return @ARGV; Need to ssh in perl if perl allows me to continue on in ssh without the perl script anymore
-`$ssh_string echo '$bashrc_string' >> ~/.bashrc`; # I need to get this string to only append if bashrc doesn't already contain the string.
-
+my $bashrc_string = 'case "$-" in\n*i*) exec zsh ;;\n*) echo "" ;;\nesac';
+print "ssh string = M $ssh_string\n";
+`$ssh_string if grep "\$-" ~/.bashrc then print "all good in da hood" else echo $bashrc_string >> ~/.bashrc fi`;
 # depricated?
     #my $at_symbol_index = index($ARGV[-1], '@') ;
     #$hostname = substr($userhost, $at_symbol_index + 1); 
