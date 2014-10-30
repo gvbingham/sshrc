@@ -8,34 +8,38 @@ my $config = {
         '~/.vimrc',         
         '~/.vim',
         '~/.oh-my-zsh',
+        '~/.zshrc',
     ],
 };
 
-my $sshrc_string = '[-z "$PS1"] && return\nexec zsh;';
-my $port = $1 if join(' ', @ARGV) =~ /p\s*(\d*)/;
-my $at_symbol_index = index($ARGV[-1], '@') ;
+# get the full ARGV as one single string for easier regexing
+my $ssh_string = join(' ', @ARGV);
+
+# get user and hostname together like user@hostname
 my $userhost = $ARGV[-1];
 
-sub scp {
-    my $files_string = '';
-    foreach my $item (@{$config->{'local_locations'}}) {
-        print $item;
-        $files_string .= $item . ' ';
-    }
-    print "files - $files_string\n";
-
-    my $port_string;
-    $port_string = ($port) ? "-P $port" : "";
-    print "scp -r$port_string $files_string ${userhost}:~/";
-    `scp -r $port_string $files_string ${userhost}:~/`;
+# get list of files in one space seperated string
+my $files_string = '';
+foreach my $item (@{$config->{'local_locations'}}) {
+    $files_string .= $item . ' ';
 }
 
-scp();
+# get port string if port even exists
+my $port_string;
+my $port = $1 if $ssh_string =~ /p\s*(\d*)/;
+$port_string = ($port) ? "P $port" : "";
 
-#return @ARGV; Need to ssh in perl if perl allows me to continue on in ssh without the perl script anymore
-# put together an ssh string; 
-## first ssh
-## with perliminary arguments
-## user@hostNAME;
-        #$hostname = substr($userhost, $at_symbol_index + 1); 
-        #$username = $1 if $userhost =~ /(\w*)@/;
+# do the secure copy
+print "running the following command... scp -r$port_string $files_string ${userhost}:~/";
+`scp -r $port_string $files_string ${userhost}:~/`;
+
+# get string to append to .bashrc 
+# my $bashrc_string = '[-z "$PS1"] && return\nexec zsh;';
+my $bashrc_string = 'case "$-" in\n*i*) exec zsh ;;\n*) echo "" ;;\nesac';
+# return @ARGV; Need to ssh in perl if perl allows me to continue on in ssh without the perl script anymore
+`$ssh_string echo '$bashrc_string' >> ~/.bashrc`; # I need to get this string to only append if bashrc doesn't already contain the string.
+
+# depricated?
+    #my $at_symbol_index = index($ARGV[-1], '@') ;
+    #$hostname = substr($userhost, $at_symbol_index + 1); 
+    #$username = $1 if $userhost =~ /(\w*)@/;
