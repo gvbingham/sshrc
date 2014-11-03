@@ -1,5 +1,16 @@
 #!perl
 
+=pod 
+=head1 Usage
+Best practice is to have the following text already in your local .bashrc
+
+if echo "$-" | grep i > /dev/null; then
+   exec zsh;
+fi
+
+Modify the config object to include each file you want sent to the remote server.
+=cut
+
 use strict;
 use warnings;
 
@@ -30,19 +41,10 @@ foreach my $item (@{$config->{'local_locations'}}) {
 # get port string if port even exists
 my $port_string;
 my $port = $1 if $ssh_string =~ /p\s*(\d*)/;
-$port_string = ($port) ? "P $port" : "";
+$port_string = ($port) ? "--port=$port" : "";
 #print "\nport string = $port_string\n";
 
 # do the secure copy
-print "\ncopying your configuration files; depending upon connection this may be a few moments\n";
-print "\nrunning the following command... scp -r$port_string $files_string ${userhost}:~/\n";
-`sudo scp -r$port_string $files_string ${userhost}:~/`;
-
-# Depricated
-# get string to append to .bashrc 
-# my $bashrc_string = '[-z "$PS1"] && return\nexec zsh;';
-# return @ARGV; Need to ssh in perl if perl allows me to continue on in ssh without the perl script anymore
-#my $bashrc_string = 'case "$-" in\n*i*) exec zsh ;;\n*) echo "" ;;\nesac';
-# print "\nappending a configuration line to your .bashrc file";
-#`$ssh_string if grep "\$-" ~/.bashrc then print "all good in da hood" else echo "$bashrc_string" >> ~/.bashrc fi`;
-#`$ssh_string if grep "\$-" ~/.bashrc then print "all good in da hood" else printf '%s\n' 'case "$-" in' '*i*) exec zsh ;;' '*) echo "" ;;' 'esac" >> ~/.bashrc fi'`;
+print "\ncopying your configuration files; depending upon connection this may be a few moments";
+print "\nrunning the following command... rsync -rpzq --progress $port_string $files_string ${userhost}:~/";
+`rsync -rpz --progress $port_string $files_string ${userhost}:~/`;
