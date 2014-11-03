@@ -9,6 +9,7 @@ my $config = {
         '~/.vim',
         '~/.oh-my-zsh',
         '~/.zshrc',
+        '~/.bashrc',
     ],
 };
 
@@ -35,11 +36,13 @@ $port_string = ($port) ? "P $port" : "";
 # do the secure copy
 print "\ncopying your configuration files; depending upon connection this may be a few moments\n";
 print "\nrunning the following command... scp -r$port_string $files_string ${userhost}:~/\n";
-`scp -r$port_string $files_string ${userhost}:~/`;
+`sudo scp -r$port_string $files_string ${userhost}:~/`;
 
+# Depricated
 # get string to append to .bashrc 
 # my $bashrc_string = '[-z "$PS1"] && return\nexec zsh;';
 # return @ARGV; Need to ssh in perl if perl allows me to continue on in ssh without the perl script anymore
-my $bashrc_string = 'case "$-" in\n*i*) exec zsh ;;\n*) echo "" ;;\nesac';
-print "\nappending a configuration line to your .bashrc file";
-`$ssh_string if grep "\$-" ~/.bashrc then print "all good in da hood" else echo "$bashrc_string" >> ~/.bashrc fi`;
+#my $bashrc_string = 'case "$-" in\n*i*) exec zsh ;;\n*) echo "" ;;\nesac';
+# print "\nappending a configuration line to your .bashrc file";
+#`$ssh_string if grep "\$-" ~/.bashrc then print "all good in da hood" else echo "$bashrc_string" >> ~/.bashrc fi`;
+#`$ssh_string if grep "\$-" ~/.bashrc then print "all good in da hood" else printf '%s\n' 'case "$-" in' '*i*) exec zsh ;;' '*) echo "" ;;' 'esac" >> ~/.bashrc fi'`;
