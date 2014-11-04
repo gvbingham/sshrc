@@ -1,0 +1,37 @@
+#!/Users/gbingham/perl5/perlbrew/perls/perl-5.20.0/bin/perl
+use strict;
+use warnings;
+
+my $config = {
+    local_locations => [
+        '~/.vimrc',         
+        '~/.vim',
+        '~/.oh-my-zsh',
+        '~/.zshrc',
+        '~/.bashrc',
+    ],
+};
+
+# get the full ARGV as one single string for easier regexing
+my $ssh_string = 'ssh ' . join(' ', @ARGV);
+#print "\nmy ssh_string = $ssh_string\n";
+
+# get user and hostname together like user@hostname
+my $userhost = $ARGV[-1];
+#print "\nmy userhost = $userhost\n";
+
+# get list of files in one space seperated string
+my $files_string = '';
+foreach my $item (@{$config->{'local_locations'}}) {
+    $files_string .= $item . ' ';
+}
+
+# get port string if port even exists
+my $port_string;
+my $port = $1 if $ssh_string =~ /p\s*(\d*)/;
+$port_string = ($port) ? "--port=$port" : "";
+#print "\nport string = $port_string\n";
+
+# do the secure copy
+`rsync -rpz --progress $port_string $files_string ${userhost}:~/ &2>1`;
+exec "ssh @ARGV";
