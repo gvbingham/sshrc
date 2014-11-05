@@ -1,4 +1,11 @@
 #!/Users/gbingham/perl5/perlbrew/perls/perl-5.20.0/bin/perl
+
+# Add the following to your .bashrc (local)
+#
+# if echo "$-" | grep i > /dev/null; then
+#     exec zsh;
+# fi
+
 use strict;
 use warnings;
 
