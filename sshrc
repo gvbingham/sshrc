@@ -16,6 +16,7 @@ my $config = {
         '~/.oh-my-zsh',
         '~/.zshrc',
         '~/.bashrc',
+        '~/bin',
     ],
 };
 
@@ -40,5 +41,5 @@ $port_string = ($port) ? "-e 'ssh -p $port'" : "";
 print "\nport string = $port_string\n";
 
 # do the secure copy
-`rsync -rpz $port_string $files_string ${userhost}:~/ &2>1`;
+`rsync -rpz --delete $port_string $files_string ${userhost}:~/ &2>1`;
 exec "ssh @ARGV";
