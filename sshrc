@@ -37,7 +37,7 @@ print "\nmy ssh_string = $ssh_string\n";
 my $userhost = $ARGV[-1];
 print "\nmy userhost = $userhost\n";
 
-# get list of files in one space seperated string
+# get list of files in one space separated string
 my $files_string = '';
 foreach my $item (@{$config->{'local_locations'}}) {
     $files_string .= $item . ' ';
