@@ -7,10 +7,10 @@ my $config = {
     local_locations => [
         '~/.vimrc',         
         '~/.vim',
-        '~/.oh-my-zsh',
-        '~/.zshrc',
         '~/.bashrc',
         '~/bin',
+        '~/.oh-my-zsh',
+        '~/.zshrc',
         '~/.gitconfig',
     ],
 };
