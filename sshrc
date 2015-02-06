@@ -1,19 +1,5 @@
 #!/usr/bin/env perl
 
-=head
-Add the following to your .bashrc (local)
-
-if echo "$-" | grep i > /dev/null; then
-    exec zsh;
-fi 
-
-If you are using zsh-syntax-highlighting put this into your .zshrc
-
-if [[ `hostname` != *zug* ]]; then
-    plugins=(zsh-syntax-highlighting)
-fi
-=cut
-
 use strict;
 use warnings;
 
