@@ -7,7 +7,6 @@ my $config = {
     local_locations => [
         '~/.vimrc',         
         '~/.vim',
-        '~/.bashrc',
         '~/bin',
         '~/.oh-my-zsh',
         '~/.zshrc',
